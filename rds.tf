@@ -9,6 +9,15 @@ resource "aws_db_subnet_group" "postgres_subnet_group" {
   }
 }
 
+resource "aws_db_parameter_group" "education" {
+  name   = "education"
+  family = "postgres13"
+
+  parameter {
+    name  = "log_connections"
+    value = "1"
+  }
+}
 
 resource "aws_db_instance" "postgres_db" {
   allocated_storage    = 20
@@ -19,13 +28,14 @@ resource "aws_db_instance" "postgres_db" {
   db_name              = "mydb"
   username             = jsondecode(aws_secretsmanager_secret_version.db_credentials_version.secret_string).username
   password             = jsondecode(aws_secretsmanager_secret_version.db_credentials_version.secret_string).password
-  parameter_group_name = "default.postgres13"  # Default parameter group for PostgreSQL 13
+  parameter_group_name = "default.postgres16"  # Default parameter group for PostgreSQL 13
   multi_az             = false
   publicly_accessible  = false
   skip_final_snapshot  = true
 
   vpc_security_group_ids = [aws_security_group.postgres_sg.id]
   db_subnet_group_name   = aws_db_subnet_group.postgres_subnet_group.name
+#   parameter_group_name        = aws_db_parameter_group.education.name
 
   tags = {
     Name = "MyPostgresDB"
