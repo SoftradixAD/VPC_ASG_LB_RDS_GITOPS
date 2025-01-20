@@ -13,7 +13,7 @@ variable "image_id" {
 variable "zone_id" {
   description = "Image id which will be used to create Instance"
   type        = string
-  default     = "ami-00bb6a80f01f03502" 
+  default     = "Z0813984SYX1Y8GLBGC7" 
 }
 
 
