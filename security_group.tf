@@ -22,6 +22,7 @@ resource "aws_security_group" "instance_sg" {
 #creating security group for load balancer
 resource "aws_security_group" "alb_sg" {
   name        = "alb-group"
+  vpc_id      = aws_vpc.main.id
   description = "Security group for ALB"
 
   ingress {
