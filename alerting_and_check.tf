@@ -4,6 +4,7 @@ resource "aws_route53_health_check" "dns" {
   resource_path     = "/"
   failure_threshold = 3
   request_interval  = 30
+  port = 443
 }
 
 
