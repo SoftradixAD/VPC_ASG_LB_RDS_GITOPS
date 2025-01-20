@@ -1,3 +1,15 @@
+# Create a DB Subnet Group for the RDS instance
+resource "aws_db_subnet_group" "postgres_subnet_group" {
+  name        = "my-postgres-subnet-group"
+  description = "Subnet group for PostgreSQL RDS instance"
+  subnet_ids  = [ aws_subnet.private.id, aws_subnet.private2.id ]  # Use the subnets from the default VPC
+
+  tags = {
+    Name = "MyPostgresSubnetGroup"
+  }
+}
+
+
 resource "aws_db_instance" "postgres_db" {
   allocated_storage    = 20
   storage_type         = "gp2"
@@ -13,6 +25,7 @@ resource "aws_db_instance" "postgres_db" {
   skip_final_snapshot  = true
 
   vpc_security_group_ids = [aws_security_group.postgres_sg.id]
+  db_subnet_group_name   = aws_db_subnet_group.postgres_subnet_group.name
 
   tags = {
     Name = "MyPostgresDB"
