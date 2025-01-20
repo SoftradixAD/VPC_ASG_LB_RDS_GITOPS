@@ -1,0 +1,68 @@
+name: Validate and Deploy the Terraform code
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '.github/workflows/Destroy.yaml'
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS CLI
+        env:  
+          ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          REGION:     ${{ secrets.AWS_REGION }}
+        run: |
+          aws configure set aws_access_key_id $ACCESS_KEY
+          aws configure set aws_secret_access_key $SECRET_KEY
+          aws configure set region $REGION
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform initialization
+        run: terraform init
+
+      - name: Validate
+        run: terraform validate
+
+
+  Deploy:
+    needs: validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS CLI
+        env:  
+          ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          REGION:     ${{ secrets.AWS_REGION }}
+        run: |
+          aws configure set aws_access_key_id $ACCESS_KEY
+          aws configure set aws_secret_access_key $SECRET_KEY
+          aws configure set region $REGION
+
+      - name: Terraform initialization
+        run: terraform init
+
+      - name: Validate Again
+        run: terraform validate
+
+      # - name: Deploy
+      #   run: |
+      #     terraform apply --auto-approve
+      #     # terraform taint aws_instance.main_instance
+

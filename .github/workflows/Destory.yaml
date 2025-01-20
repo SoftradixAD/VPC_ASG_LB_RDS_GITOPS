@@ -1,0 +1,62 @@
+name: Validate and Destroy the Infrasturcture
+
+on:
+  workflow_dispatch: 
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS CLI
+        env:  
+          ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          REGION:     ${{ secrets.AWS_REGION }}
+        run: |
+          aws configure set aws_access_key_id $ACCESS_KEY
+          aws configure set aws_secret_access_key $SECRET_KEY
+          aws configure set region $REGION
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform initialization
+        run: terraform init
+
+      - name: Validate Again
+        run: terraform validate
+
+  Destroy:
+    needs: validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS CLI
+        env:  
+          ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          REGION:     ${{ secrets.AWS_REGION }}
+        run: |
+          aws configure set aws_access_key_id $ACCESS_KEY
+          aws configure set aws_secret_access_key $SECRET_KEY
+          aws configure set region $REGION
+
+      - name: Terraform initialization
+        run: terraform init
+
+      - name: Validate Again
+        run: terraform validate
+
+      - name: Destroy
+        run: |
+          terraform destroy --auto-approve
