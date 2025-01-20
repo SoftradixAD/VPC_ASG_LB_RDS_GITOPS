@@ -1,26 +1,27 @@
-resource "aws_route53_health_check" "dns" {
-  fqdn              = "chandigarhtourism.site"
-  type              = "HTTPS"
-  resource_path     = "/"
-  failure_threshold = 3
-  request_interval  = 30
-  port = 443
+resource "aws_sns_topic" "dns_health_check" {
+  name = "dns_health_check_alerts"
 }
 
-
-resource "aws_sns_topic" "alert" {
-  name = "dns-health-check-alerts"
-}
-
-resource "aws_sns_topic_subscription" "email_subscription" {
-  topic_arn = aws_sns_topic.alert.arn
+resource "aws_sns_topic_subscription" "dns_health_check_email" {
+  topic_arn = aws_sns_topic.dns_health_check.arn
   protocol  = "email"
-  endpoint  = "akshaydhadwal2@gmail.com"
+  endpoint  = var.mail
 }
 
+resource "aws_route53_health_check" "dns_health_check" {
+  fqdn                = "chandigarhtourism.site"
+  type                = "HTTPS"
+  resource_path       = "/"
+  failure_threshold   = 3
+  request_interval    = 30
+  measure_latency     = true
+  port                = 80
+  enable_sni          = false
+  regions             = ["ap-south-1", "us-east-1", "us-east-2"] 
+}
 
-resource "aws_cloudwatch_metric_alarm" "cw_alarm" {
-  alarm_name          = "DNSHealthCheckAlarm"
+resource "aws_cloudwatch_metric_alarm" "dns_health_check_alarm" {
+  alarm_name          = "dns_health_check_failure"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 1
   metric_name         = "HealthCheckStatus"
@@ -29,5 +30,11 @@ resource "aws_cloudwatch_metric_alarm" "cw_alarm" {
   statistic           = "Minimum"
   threshold           = 1
 
-  alarm_actions = [aws_sns_topic.alert.arn]
+  dimensions = {
+    HealthCheckId = aws_route53_health_check.dns_health_check.id
+  }
+
+  alarm_actions = [
+    aws_sns_topic.dns_health_check.arn
+  ]
 }

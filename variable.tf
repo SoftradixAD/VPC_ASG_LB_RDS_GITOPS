@@ -22,3 +22,9 @@ variable "acm_certificate" {
   type        = string
   default     = "arn:aws:acm:ap-south-1:931623615406:certificate/d31cd6a5-a4e2-4159-8b99-ba2ea550166b" 
 }
+
+variable "mail" {
+  description = "Mail to send notifications"
+  type        = string
+  default     = "akshaydhadwal2@gmail.com" 
+}
