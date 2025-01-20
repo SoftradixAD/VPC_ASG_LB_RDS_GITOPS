@@ -12,7 +12,7 @@ resource "aws_db_instance" "postgres_db" {
   publicly_accessible  = false
   skip_final_snapshot  = true
 
-  vpc_security_group_ids = aws_security_group.postgres_sg.id
+  vpc_security_group_ids = [aws_security_group.postgres_sg.id]
 
   tags = {
     Name = "MyPostgresDB"
@@ -29,4 +29,5 @@ output "db_instance_id" {
 
 output "db_password" {
   value = random_password.db_password.result  # Output the generated password (optional)
+  sensitive = true
 }
