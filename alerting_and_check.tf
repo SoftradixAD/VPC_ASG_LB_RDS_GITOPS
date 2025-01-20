@@ -1,8 +1,10 @@
 resource "aws_sns_topic" "dns_health_check" {
+  provider            = aws.useast1 
   name = "dns_health_check_alerts"
 }
 
 resource "aws_sns_topic_subscription" "dns_health_check_email" {
+  provider            = aws.useast1 
   topic_arn = aws_sns_topic.dns_health_check.arn
   protocol  = "email"
   endpoint  = var.mail
@@ -21,6 +23,7 @@ resource "aws_route53_health_check" "dns_health_check" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "dns_health_check_alarm" {
+  provider            = aws.useast1 
   alarm_name          = "dns_health_check_failure"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 1
