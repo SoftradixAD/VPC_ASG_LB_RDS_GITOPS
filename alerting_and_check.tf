@@ -17,7 +17,7 @@ resource "aws_route53_health_check" "dns_health_check" {
   measure_latency     = true
   port                = 80
   enable_sni          = false
-  regions             = ["ap-south-1", "us-east-1", "us-east-2"] 
+  regions             = ["ap-south-1", "us-east-1", "us-west-1"] 
 }
 
 resource "aws_cloudwatch_metric_alarm" "dns_health_check_alarm" {
