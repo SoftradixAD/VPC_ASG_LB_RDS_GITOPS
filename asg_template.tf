@@ -10,7 +10,7 @@ resource "aws_launch_template" "launch_template" {
   
   instance_type          = var.instance_type
   image_id               = var.image_id  # Specify your desired AMI ID
-  key_name               = "prod-key"  # Specify the name of your EC2 key pair
+  key_name               = "softradixad"  # Specify the name of your EC2 key pair
   
   #security_groups	 = [aws_security_group.prod.id] 
   
