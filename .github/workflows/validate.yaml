@@ -6,6 +6,9 @@ on:
       - master
     paths-ignore:
       - '.github/workflows/Destroy.yaml'
+
+  workflow_dispatch:
+
 jobs:
   validate:
     runs-on: ubuntu-latest
