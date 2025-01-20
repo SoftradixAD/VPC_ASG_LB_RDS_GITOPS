@@ -61,8 +61,6 @@ jobs:
       - name: Validate Again
         run: terraform validate
 
-      # - name: Deploy
-      #   run: |
-      #     terraform apply --auto-approve
-      #     # terraform taint aws_instance.main_instance
-
+      - name: Deploy
+        run: |
+          terraform apply --auto-approve
