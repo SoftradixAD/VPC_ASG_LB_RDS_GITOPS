@@ -15,7 +15,7 @@ resource "aws_route53_health_check" "dns_health_check" {
   failure_threshold   = 3
   request_interval    = 30
   measure_latency     = true
-  port                = 80
+  port                = 443
   enable_sni          = false
   regions             = ["us-west-2", "us-east-1", "us-west-1"] 
 }
