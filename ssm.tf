@@ -20,3 +20,10 @@ resource "aws_iam_policy_attachment" "ssm_policy_attach" {
   roles      = [aws_iam_role.ssm_role.name]
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
+
+# Attach AmazonEC2ContainerRegistryFullAccess policy
+resource "aws_iam_policy_attachment" "ecr_policy_attach" {
+  name       = "ecr_policy_attach"
+  roles      = [aws_iam_role.ssm_role.name]
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
+}
