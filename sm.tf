@@ -14,6 +14,7 @@ resource "random_password" "db_password" {
   upper   = true
   lower   = true
   numeric  = true
+  override_special = "!#$%^&*()-_=+[]{}|;:,.<>?"
 }
 
 # Store the username and password as key-value pairs in the secret
