@@ -9,15 +9,14 @@ resource "aws_db_subnet_group" "postgres_subnet_group" {
   }
 }
 
-resource "aws_db_parameter_group" "education" {
-  name   = "education"
-  family = "postgres13"
-
-  parameter {
-    name  = "log_connections"
-    value = "1"
-  }
+data "aws_secretsmanager_secret" "db_credentials" {
+  name = aws_secretsmanager_secret.db_credentials.name
 }
+
+data "aws_secretsmanager_secret_version" "db_credentials_version" {
+  secret_id = data.aws_secretsmanager_secret.db_credentials.id
+}
+
 
 resource "aws_db_instance" "postgres_db" {
   allocated_storage    = 20
@@ -26,8 +25,8 @@ resource "aws_db_instance" "postgres_db" {
   engine_version       = "16"  # Specify the version you want
   instance_class       = "db.t3.micro"  # Choose instance size
   db_name              = "mydb"
-  username             = jsondecode(aws_secretsmanager_secret_version.db_credentials_version.secret_string).username
-  password             = jsondecode(aws_secretsmanager_secret_version.db_credentials_version.secret_string).password
+  username             = jsondecode(data.aws_secretsmanager_secret_version.db_credentials_version.secret_string)["username"]
+  password             = jsondecode(data.aws_secretsmanager_secret_version.db_credentials_version.secret_string)["password"]
   parameter_group_name = "default.postgres16"  # Default parameter group for PostgreSQL 13
   multi_az             = false
   publicly_accessible  = false
