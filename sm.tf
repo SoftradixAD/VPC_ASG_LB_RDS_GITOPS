@@ -10,7 +10,7 @@ resource "aws_secretsmanager_secret" "db_credentials" {
 # Generate a random password for the database
 resource "random_password" "db_password" {
   length  = 16
-  special = true
+  # special = true
   upper   = true
   lower   = true
   numeric  = true
