@@ -7,5 +7,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Check IP
-        run: curl -s ifconfig.me
+      - name: Check IP and store in variable
+        run: |
+          IP=$(curl -s ifconfig.me)
+          echo "IP Address: $IP"
+          echo "IP=$IP" >> $GITHUB_ENV
+
+      - name: Use the stored IP
+        run: echo "The stored IP is $IP"
+        env:
+          IP: ${{ env.IP }}
