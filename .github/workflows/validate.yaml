@@ -1,11 +1,11 @@
 name: Validate and Deploy the Terraform code
 
 on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - '.github/workflows/Destroy.yaml'
+  # push:
+  #   branches:
+  #     - master
+    # paths-ignore:
+    #   - '.github/workflows/Destroy.yaml'
 
   workflow_dispatch:
 
